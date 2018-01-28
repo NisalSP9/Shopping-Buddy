@@ -18,4 +18,6 @@ public interface UserDetailDAO {
 
     public boolean deleteUser(Connection connection, String userID) throws ClassNotFoundException, SQLException;
 
+    public boolean editUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException;
+
 }

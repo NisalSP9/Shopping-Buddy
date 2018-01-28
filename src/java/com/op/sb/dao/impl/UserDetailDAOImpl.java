@@ -62,5 +62,26 @@ public class UserDetailDAOImpl implements UserDetailDAO {
         
         return 0 < PS.executeUpdate();
     }
+    
+    String UPDATE_USER_DETAILS = "UPDATE user_details SET name = ?, age = ?, home_address = ?, office_address = ?, mobile = ?, phone = ?, email = ? WHERE user_id = ?;";
+
+    @Override
+    public boolean editUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException {
+
+        PreparedStatement PS = connection.prepareStatement(UPDATE_USER_DETAILS);
+
+        PS.setString(1, user.getName());
+        PS.setInt(2, user.getAge());
+        PS.setString(3, user.getHomeAddress());
+        PS.setString(4, user.getOfficeAddress());
+        PS.setString(5, user.getMobile());
+        PS.setString(6, user.getPhone());
+        PS.setString(7, user.getEmail());
+        PS.setInt(8, user.getUserID());
+
+        return 0 < PS.executeUpdate();
+
+
+    }
 
 }

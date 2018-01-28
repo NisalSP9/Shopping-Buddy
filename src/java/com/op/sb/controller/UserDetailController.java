@@ -84,8 +84,7 @@ public class UserDetailController extends HttpServlet {
             while (resultSet.next()) {
 
                 JSONObject json = new JSONObject();
-                
-                
+
                 json.put("user_id", resultSet.getInt(1));
                 json.put("name", resultSet.getString(2));
                 json.put("age", resultSet.getInt(3));
@@ -94,7 +93,6 @@ public class UserDetailController extends HttpServlet {
                 json.put("mobile", resultSet.getString(6));
                 json.put("phone", resultSet.getString(7));
                 json.put("email", resultSet.getString(8));
-                
 
                 jSONArray.put(json);
 
@@ -148,6 +146,8 @@ public class UserDetailController extends HttpServlet {
 
             boolean rst = 0 < service.addNewUser(connection, user);
 
+            connection.close();
+
             if (rst) {
 
                 PrintWriter pw = response.getWriter();
@@ -161,16 +161,22 @@ public class UserDetailController extends HttpServlet {
             }
 
         } catch (JSONException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("JSONException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("ClassNotFoundException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("SQLException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 
         try {
             BufferedReader reader = req.getReader();
@@ -185,11 +191,70 @@ public class UserDetailController extends HttpServlet {
 
             service.deleteUser(connection, id);
             connection.close();
-        } catch (SQLException ex) {
+        }  catch (JSONException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("JSONException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("ClassNotFoundException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("SQLException occurred....! Read log for more infor");
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+
+        try {
+            BufferedReader reader = req.getReader();
+
+            JSONObject jsonObject = new JSONObject(reader.readLine());
+
+            int user_id = jsonObject.getInt("user_id");
+            String name = jsonObject.getString("name");
+            int age = jsonObject.getInt("age");
+            String home = jsonObject.getString("home");
+            String office = jsonObject.getString("office");
+            String mobile = jsonObject.getString("mobile");
+            String phone = jsonObject.getString("phone");
+            String email = jsonObject.getString("email");
+
+            UserDetailDTO user = new UserDetailDTO(user_id, name, age, home, office, mobile, phone, email);
+
+            Connection connection = DatabaseResourceFactory.getFactoryConnection().getConnection();
+
+            UserDetailService service = new UserDetailServiceImpl();
+
+            boolean rst = service.editUser(connection, user);
+
+            if (rst) {
+
+                PrintWriter pw = response.getWriter();
+                pw.print("Updated....!");
+
+            } else {
+
+                PrintWriter pw = response.getWriter();
+                pw.print("Something went wrong....!");
+
+            }
+
         } catch (JSONException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("JSONException occurred....! Read log for more infor");
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("ClassNotFoundException occurred....! Read log for more infor");
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            PrintWriter pw = response.getWriter();
+            pw.print("SQLException occurred....! Read log for more infor");
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -40,10 +40,17 @@ public class UserDetailServiceImpl implements UserDetailService {
     @Override
     public boolean deleteUser(Connection connection, String userID) throws ClassNotFoundException, SQLException {
 
-         UserDetailDAO userDAO = new UserDetailDAOImpl();
-         return userDAO.deleteUser(connection,userID);
-        
+        UserDetailDAO userDAO = new UserDetailDAOImpl();
+        return userDAO.deleteUser(connection, userID);
 
+    }
+
+    @Override
+    public boolean editUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException {
+
+        UserDetailDAO userDAO = new UserDetailDAOImpl();
+
+        return userDAO.editUser(connection, user);
     }
 
 }
