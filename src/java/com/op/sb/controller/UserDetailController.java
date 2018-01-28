@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +51,7 @@ public class UserDetailController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UserDetailController</title>");            
+            out.println("<title>Servlet UserDetailController</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UserDetailController at " + request.getContextPath() + "</h1>");
@@ -70,7 +72,49 @@ public class UserDetailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
+
+        try {
+            Connection connection = DatabaseResourceFactory.getFactoryConnection().getConnection();
+
+            UserDetailService service = new UserDetailServiceImpl();
+
+            ResultSet resultSet = service.getUsers(connection);
+
+            JSONArray jSONArray = new JSONArray();
+
+            while (resultSet.next()) {
+
+                JSONObject json = new JSONObject();
+                
+                
+                json.put("user_id", resultSet.getInt(1));
+                json.put("name", resultSet.getString(2));
+                json.put("age", resultSet.getInt(3));
+                json.put("home", resultSet.getString(4));
+                json.put("office", resultSet.getString(5));
+                json.put("mobile", resultSet.getString(6));
+                json.put("phone", resultSet.getString(7));
+                json.put("email", resultSet.getString(8));
+                
+
+                jSONArray.put(json);
+
+            }
+
+            PrintWriter out = response.getWriter();
+
+            out.print(jSONArray);
+
+            connection.close();
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -85,8 +129,6 @@ public class UserDetailController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // processRequest(request, response);
-            //System.out.println("llllllllllllllllllllllllllllllllllllllllll");
             BufferedReader reader = request.getReader();
 
             JSONObject jsonObject = new JSONObject(reader.readLine());
@@ -98,9 +140,8 @@ public class UserDetailController extends HttpServlet {
             String mobile = jsonObject.getString("mobile");
             String phone = jsonObject.getString("phone");
             String email = jsonObject.getString("email");
-            
 
-            UserDetailDTO user = new UserDetailDTO(0,name, age, home, office, mobile, phone, email);
+            UserDetailDTO user = new UserDetailDTO(0, name, age, home, office, mobile, phone, email);
 
             Connection connection = DatabaseResourceFactory.getFactoryConnection().getConnection();
 
@@ -110,7 +151,7 @@ public class UserDetailController extends HttpServlet {
 
             if (rst) {
 
-               PrintWriter pw = response.getWriter();
+                PrintWriter pw = response.getWriter();
                 pw.print("Saved....!");
 
             } else {

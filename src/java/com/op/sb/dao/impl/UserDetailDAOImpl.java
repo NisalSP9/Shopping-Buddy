@@ -5,26 +5,27 @@
  */
 package com.op.sb.dao.impl;
 
-
 import com.op.sb.dao.UserDetailDAO;
 import com.op.sb.dto.UserDetailDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
  * @author nisalsp9
  */
-public class UserDetailDAOImpl implements UserDetailDAO{
-    
+public class UserDetailDAOImpl implements UserDetailDAO {
+
     String ADD_NEW_USER = "INSERT INTO user_details (name, age, home_address, office_address, mobile, phone, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     @Override
     public int addNewUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException {
 
         PreparedStatement PS = connection.prepareStatement(ADD_NEW_USER);
-        
+
         PS.setString(1, user.getName());
         PS.setInt(2, user.getAge());
         PS.setString(3, user.getHomeAddress());
@@ -32,11 +33,22 @@ public class UserDetailDAOImpl implements UserDetailDAO{
         PS.setString(5, user.getMobile());
         PS.setString(6, user.getPhone());
         PS.setString(7, user.getEmail());
-        
+
         int RST = PS.executeUpdate();
-        
+
         return RST;
 
     }
-    
+
+    @Override
+    public ResultSet getUsers(Connection connection) throws ClassNotFoundException, SQLException {
+        String sql = "select * from user_details";
+
+        Statement statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        return resultSet;
+    }
+
 }
