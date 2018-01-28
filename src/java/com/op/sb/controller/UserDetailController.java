@@ -189,7 +189,22 @@ public class UserDetailController extends HttpServlet {
 
             UserDetailService service = new UserDetailServiceImpl();
 
-            service.deleteUser(connection, id);
+            boolean rst = service.deleteUser(connection, id);
+            
+             if (rst) {
+
+                PrintWriter pw = response.getWriter();
+                pw.print("Deleted....!");
+
+            } else {
+
+                PrintWriter pw = response.getWriter();
+                pw.print("Something went wrong....!");
+
+            }
+            
+            
+            
             connection.close();
         }  catch (JSONException ex) {
             PrintWriter pw = response.getWriter();
