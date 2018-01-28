@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -168,6 +167,32 @@ public class UserDetailController extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+     @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        try {
+            BufferedReader reader = req.getReader();
+
+            JSONObject jsonObject = new JSONObject(reader.readLine());
+
+            String id = jsonObject.getString("user_id");
+
+            Connection connection = DatabaseResourceFactory.getFactoryConnection().getConnection();
+
+            UserDetailService service = new UserDetailServiceImpl();
+
+            service.deleteUser(connection, id);
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(UserDetailController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**

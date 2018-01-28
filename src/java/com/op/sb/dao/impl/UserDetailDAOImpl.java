@@ -50,5 +50,17 @@ public class UserDetailDAOImpl implements UserDetailDAO {
 
         return resultSet;
     }
+    
+    String DELETE_FROM_USER = "delete from user_details where user_id = ? ";
+
+    @Override
+    public boolean deleteUser(Connection connection, String userID) throws ClassNotFoundException, SQLException {
+
+        PreparedStatement PS = connection.prepareStatement(DELETE_FROM_USER);
+        
+        PS.setString(1, userID);       
+        
+        return 0 < PS.executeUpdate();
+    }
 
 }

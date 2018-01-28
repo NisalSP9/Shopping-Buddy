@@ -15,9 +15,11 @@ import java.sql.SQLException;
  * @author nisalsp9
  */
 public interface UserDetailService {
-    
-        public int addNewUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException;
-        public ResultSet getUsers(Connection connection)throws ClassNotFoundException,SQLException;
 
-    
-}
+    public int addNewUser(Connection connection, UserDetailDTO user) throws SQLException, ClassNotFoundException;
+
+    public ResultSet getUsers(Connection connection) throws ClassNotFoundException, SQLException;
+
+    public boolean deleteUser(Connection connection, String userID) throws ClassNotFoundException, SQLException;
+
+    }
