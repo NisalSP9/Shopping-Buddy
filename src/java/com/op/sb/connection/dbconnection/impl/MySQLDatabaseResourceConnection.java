@@ -17,7 +17,7 @@ public class MySQLDatabaseResourceConnection implements DBResourceConnection{
 
         Class.forName("com.mysql.jdbc.Driver");
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/shopping_buddy", "root", "ep1137");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/shopping_buddy", "newuser", "newuser");
 
         return connection;
 
